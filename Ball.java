@@ -1,10 +1,6 @@
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Random;
 
-public class Ball implements Runnable {
+public class Ball {
     public int accX;
     public int accY;
 
@@ -19,7 +15,6 @@ public class Ball implements Runnable {
     private int boundX;
     private int boundY;
     private int radius;
-    private int delayRate;
     public static int Random(int maxValue) {
         return (int) Math.round((Math.random() * maxValue));
     }
@@ -35,7 +30,6 @@ public class Ball implements Runnable {
         this.accY = Random(10);
         this.originalAccX = this.accX;
         this.originalAccY = this.accY;
-        this.delayRate = 60;
         this.color = new Color(Random(255),Random(255),Random(255));
     }
     public int getPositionX(){return positionX;}
@@ -49,33 +43,32 @@ public class Ball implements Runnable {
         this.positionY = this.originalPositionY;
     }
 
-    @Override
-    public void run() {
-        Timer timer = new Timer( this.delayRate, new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                positionX += accX;
-                positionY += accY;
+    public void updatePosition(){
+        positionX += accX;
+        positionY += accY;
 
-                if (positionX<radius){
-                    accX = -accX;
-                    positionX = radius;
-                }else if ((positionX+ radius)>boundX){
-                    accX = -accX;
-                    positionX = boundX -  radius;
-                }
+        if (positionX<radius){
+            accX = -accX;
+            positionX = radius;
+        }else if ((positionX+ radius)>boundX){
+            accX = -accX;
+            positionX = boundX -  radius;
+        }
 
-                if (positionY<radius){
-                    accY = -accY;
-                    positionY = radius;
-                }else if ((positionY+ radius)>boundY){
-                    accY = -accY;
-                    positionY = boundY -  radius;
-                }
-            }
-        });
-        timer.start();
-
+        if (positionY<radius){
+            accY = -accY;
+            positionY = radius;
+        }else if ((positionY+ radius)>boundY){
+            accY = -accY;
+            positionY = boundY -  radius;
+        }
     }
+
+    public void updateBoundary(int width, int height){
+        this.boundX = width;
+        this.boundY = height;
+    }
+
     public void show(Graphics g){
         g.setColor(this.color);
         g.fillOval((this.positionX-this.radius) , (this.positionY-this.radius), (2 * this.radius), (2 * this.radius));

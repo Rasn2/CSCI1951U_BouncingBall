@@ -63,18 +63,26 @@ public class GamePanel extends JPanel implements Runnable {
                 if (!clickBall) {
                     Ball ball = new Ball(event.getX(), event.getY(), pWidth, pHight);
                     ballSet.add(ball);
-                    executor.execute(ball);
                 }
             }
         });
-
         executor.execute(this);
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        boolean updateBoundary = false;
+        if (pWidth != this.getWidth() || pHight != this.getHeight()) {
+            pWidth = this.getWidth();
+            pHight = this.getHeight();
+            updateBoundary = true;
+        }
         for (Ball ball : ballSet) {
+            if (updateBoundary) {
+                ball.updateBoundary(pWidth, pHight);
+            }
+            ball.updatePosition();
             ball.show(g);
         }
     }
